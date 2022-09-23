@@ -3,8 +3,6 @@ const route = express.Router()
 
 const services = require('../services/render');
 const controller = require('../controller/controller');
-const authController = require("../controller/auth");
-const { ensureAuth, ensureGuest } = require("../middleware/auth");
 
 /**
  *  @description Root Route
@@ -23,13 +21,6 @@ route.get('/add-user', services.add_user)
  *  @method GET /update-user
  */
 route.get('/update-user', services.update_user)
-
-//Main Routes - simplified for now
-route.get("/login", authController.getLogin);
-route.post("/login", authController.postLogin);
-route.get("/logout", authController.logout);
-route.get("/signup", authController.getSignup);
-route.post("/signup", authController.postSignup);
 
 
 // API
