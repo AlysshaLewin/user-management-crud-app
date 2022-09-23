@@ -3,6 +3,12 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyparser = require("body-parser");
 const path = require('path');
+const mongoose = require("mongoose");
+const passport = require("passport");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const methodOverride = require("method-override");
+const flash = require("express-flash");
 
 const connectDB = require('./config/database');
 
@@ -10,6 +16,10 @@ const app = express();
 
 //Use .env file in config folder
 require("dotenv").config({ path: "./config/.env" });
+
+// Passport config
+require("./config/passport")(passport);
+
 
 // log requests
 app.use(morgan('tiny'));
@@ -23,6 +33,27 @@ app.use(bodyparser.urlencoded({ extended : true}))
 // set view engine
 app.set("view engine", "ejs")
 //app.set("views", path.resolve(__dirname, "views/ejs"))
+
+//Use forms for put / delete
+app.use(methodOverride("_method"));
+
+// Setup Sessions - stored in MongoDB
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Use flash messages for errors, info, ect...
+app.use(flash());
+
 
 // load assets
 app.use('/css', express.static(path.resolve(__dirname, "assets/css")))
