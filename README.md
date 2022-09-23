@@ -1,4 +1,4 @@
-# CRUD_Application_Node
+# User Management Application
 In this project, we are going to create node CRUD application with express and mongodb, mvc.
 
 #### To Run this project Clone it and install modules using
